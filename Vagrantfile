@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
-  config.vm.define "puppetserver" do |server|
+  config.vm.define "server" do |server|
 	server.vm.hostname = "server.m"
 	server.vm.network "private_network", ip: "192.0.0.100"
 	server.vm.provider 'virtualbox' do |vb|
