@@ -1,0 +1,54 @@
+#!/bin/bash  
+### BEGIN INIT INFO  
+# Provides:          jboss  
+# Default-Start:     2 3 4 5  
+# Default-Stop:      0 1 6  
+# Short-Description: Start/Stop JBoss  
+### END INIT INFO  
+# chkconfig: 35 92 1
+
+JBOSS_HOME=<%= @home %>
+
+mkdir -p $JBOSS_HOME/log
+start_jboss="$JBOSS_HOME/bin/standalone.sh"
+stop_jboss="$JBOSS_HOME/bin/jboss-cli.sh --connect command=:shutdown"
+
+start() {
+echo -n "Starting JBoss: "
+${start_jboss} > $JBOSS_HOME/log/startup.log & 
+echo "done."
+}
+stop() {
+echo -n "Shutting down JBoss: "
+${stop_jboss}  > $JBOSS_HOME/log/shutdown.log 
+echo "done."
+}
+status() {
+JBOSS_PID=$(ps -ef | grep java | grep jboss | awk '{print $2}')
+if [ -n "$JBOSS_PID" ];
+      then
+	echo "JBoss is running.. Process PID=$JBOSS_PID"
+      else
+	echo "FAILED"
+fi
+}
+case "$1" in
+start)
+start
+;;
+stop)
+stop
+;;
+restart)
+stop
+sleep 10
+start
+;;
+status)
+status
+;;
+*)
+echo "Usage: $0 {start|stop|restart|status}"; exit 1;
+;;
+esac
+exit 0
